@@ -198,6 +198,24 @@
       .x-field .x-req { color: #b89bff; }
       .x-field .x-opt { color: var(--x-muted); font: var(--type-caption); }
       .x-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+      .x-multi { display: grid; gap: 8px; }
+      .x-mrow { display: flex; gap: 8px; align-items: center; }
+      .x-mrow .x-input { flex: 1; min-width: 0; }
+      .x-mono { font-family: "Geist Mono", ui-monospace, monospace; }
+      .x-input.x-mono { font-size: 15px; letter-spacing: -0.01em; }
+      .x-mrm { flex: none; width: var(--tap); height: var(--tap); border-radius: var(--r-pill); border: 1px solid var(--x-stroke-2);
+        background: transparent; color: var(--x-muted); font: var(--type-label); cursor: pointer; transition: border-color .2s, color .2s; }
+      .x-mrm:hover { border-color: rgb(248 113 113 / .5); color: var(--x-bad); }
+      .x-madd { margin-top: 8px; min-height: var(--tap); padding: 0 14px; border-radius: var(--r-pill); border: 1px dashed var(--x-stroke-2);
+        background: transparent; color: #b89bff; font: var(--type-label); cursor: pointer; transition: background .2s; }
+      .x-madd:hover { background: var(--x-card-2); }
+      .x-ids { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; }
+      .x-idchip { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 10px; border-radius: var(--r-pill);
+        border: 1px solid var(--x-stroke-2); background: var(--x-card-2); color: var(--x-text); font: var(--type-caption); cursor: pointer;
+        text-decoration: none; transition: border-color .2s, background .2s; }
+      .x-idchip:hover { border-color: var(--x-purple); }
+      .x-idchip.x-mono { font-family: "Geist Mono", ui-monospace, monospace; font-size: 12px; }
+      .x-idchip i { font-style: normal; color: var(--x-muted); }
 
       .x-chains { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
       @media (min-width: 480px) { .x-chains { grid-template-columns: repeat(5, 1fr); } }
@@ -334,6 +352,16 @@
           <input class="x-input" id="fLink" type="url" inputmode="url" placeholder="https://…" autocomplete="off" />
         </div>
         <div class="x-field">
+          <span class="x-flabel" id="fAddrLabel">Wallet address <span class="x-opt">(opsional)</span></span>
+          <div class="x-multi" id="fAddrs" role="group" aria-labelledby="fAddrLabel"></div>
+          <button type="button" class="x-madd" id="fAddrAdd">+ Tambah address</button>
+        </div>
+        <div class="x-field">
+          <span class="x-flabel" id="fXLabel">Username X <span class="x-opt">(opsional)</span></span>
+          <div class="x-multi" id="fXs" role="group" aria-labelledby="fXLabel"></div>
+          <button type="button" class="x-madd" id="fXAdd">+ Tambah username</button>
+        </div>
+        <div class="x-field">
           <span class="x-flabel" id="fDateLabel">Tanggal mint / deadline <span class="x-opt">(opsional)</span></span>
           <div class="x-row2">
             <input class="x-input" id="fDate" type="date" aria-labelledby="fDateLabel" />
@@ -418,8 +446,21 @@
             v: 1,
             checkins: Array.isArray(d.checkins) ? d.checkins.filter(function (x) { return typeof x === "string"; }) : [],
             streak: +d.streak || 0, longest: +d.longest || 0, last: typeof d.last === "string" ? d.last : null,
-            tasks: Array.isArray(d.tasks) ? d.tasks.filter(function (t) { return t && t.id && t.name; }) : []
+            tasks: Array.isArray(d.tasks) ? d.tasks.filter(function (t) { return t && t.id && t.name; }).map(function (t) {
+              t.addrs = strList(t.addrs);
+              t.xs = strList(t.xs).map(normX).filter(Boolean);
+              return t;
+            }) : []
           };
+        }
+        function strList(a) {
+          return Array.isArray(a) ? a.filter(function (x) { return typeof x === "string"; }).map(function (x) { return x.trim(); }).filter(Boolean) : [];
+        }
+        function normX(s) {
+          var v = String(s == null ? "" : s).replace(/\s+/g, "");
+          v = v.replace(/^(https?:\/\/)?(www\.|mobile\.)?(x|twitter)\.com\//i, "");
+          v = v.replace(/^@+/, "").split(/[\/?#]/)[0];
+          return v ? "@" + v : "";
         }
         function load() {
           try {
@@ -471,6 +512,27 @@
         function toast(msg) {
           var el = $("toast"); el.textContent = msg; el.classList.add("is-show");
           clearTimeout(toastT); toastT = setTimeout(function () { el.classList.remove("is-show"); }, 2200);
+        }
+        function shortAddr(a) { return a.length > 14 ? a.slice(0, 6) + "…" + a.slice(-4) : a; }
+        function copyFallback(text) {
+          var ok = false, ta = document.createElement("textarea");
+          ta.value = text; ta.setAttribute("readonly", "");
+          ta.style.position = "fixed"; ta.style.top = "0"; ta.style.left = "0"; ta.style.opacity = "0"; ta.style.pointerEvents = "none";
+          document.body.appendChild(ta);
+          try { ta.select(); ta.setSelectionRange(0, text.length); ok = document.execCommand("copy"); } catch (e) { ok = false; }
+          ta.remove();
+          return ok;
+        }
+        function copyText(text) {
+          var done = function () { toast("Address disalin ✓"); };
+          var fallback = function () { if (copyFallback(text)) done(); else toast("Gagal menyalin di mode ini"); };
+          try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(text).then(done, fallback);
+              return;
+            }
+          } catch (e) {}
+          fallback();
         }
 
         /* ---------- check-in ---------- */
@@ -608,7 +670,7 @@
           var items = sorted(S.tasks).filter(function (t) {
             if (F.cat !== "all" && t.cat !== F.cat) return false;
             if (F.chain !== "all" && chainKey(t) !== F.chain) return false;
-            if (q && (t.name + " " + (t.notes || "") + " " + chainName(t)).toLowerCase().indexOf(q) < 0) return false;
+            if (q && (t.name + " " + (t.notes || "") + " " + chainName(t) + " " + (t.addrs || []).join(" ") + " " + (t.xs || []).join(" ")).toLowerCase().indexOf(q) < 0) return false;
             return true;
           });
           var list = $("list"); list.innerHTML = "";
@@ -631,6 +693,7 @@
               "</span><h3>" + esc(t.name) + '</h3></div><span class="x-badge x-cat-' + c.id + '">' + esc(c.short || c.name) + "</span></div>" +
               (u ? '<p class="x-due ' + u.cls + '">⏰ ' + esc(u.txt) + " <small>· " + esc(u.when) + "</small></p>" : "") +
               (t.notes ? '<p class="x-notes">' + esc(t.notes) + "</p>" : "") +
+              idChips(t) +
               '<div class="x-actions"><button type="button" class="x-sbtn x-status' + (t.done ? " is-done" : "") + '" data-act="toggle" aria-label="Ubah status, sekarang ' + (t.done ? "Done" : "Ongoing") + '">' +
               (t.done ? "Done" : "Ongoing") + "</button>" +
               (t.link ? '<a class="x-sbtn x-sbtn--open" href="' + esc(t.link) + '" target="_blank" rel="noopener">Buka ↗</a>' : "") +
@@ -640,6 +703,21 @@
             slot.replaceWith(logo(t.chain, t.customChain));
             list.appendChild(el);
           });
+        }
+        function idChips(t) {
+          var addrs = t.addrs || [], xs = t.xs || [];
+          if (!addrs.length && !xs.length) return "";
+          var h = '<div class="x-ids">';
+          addrs.forEach(function (a) {
+            h += '<button type="button" class="x-idchip x-mono" data-act="copy" data-addr="' + esc(a) + '" title="' + esc(a) + '" aria-label="Salin address ' + esc(a) + '">' +
+              esc(shortAddr(a)) + ' <i aria-hidden="true">⧉</i></button>';
+          });
+          xs.forEach(function (x) {
+            var n = x.replace(/^@/, "");
+            h += '<a class="x-idchip" href="https://x.com/' + encodeURIComponent(n) + '" target="_blank" rel="noopener" aria-label="Buka ' + esc(x) + ' di X">' +
+              esc(x) + ' <i aria-hidden="true">↗</i></a>';
+          });
+          return h + "</div>";
         }
         function renderAll() { renderCheckin(); renderFilters(); renderStats(); renderList(); }
 
@@ -656,6 +734,7 @@
           var b = e.target.closest("[data-act]"); if (!b) return;
           var id = b.closest(".x-task").dataset.id, t = S.tasks.find(function (x) { return x.id === id; });
           if (!t) return;
+          if (b.dataset.act === "copy") { copyText(b.dataset.addr || ""); return; }
           if (b.dataset.act === "toggle") {
             t.done = !t.done; save(); renderStats(); renderList();
             toast(t.done ? "✓ " + t.name + " selesai!" : t.name + " balik ke Ongoing");
@@ -748,6 +827,51 @@
           if (focus) setTimeout(function () { try { el.focus({ preventScroll: true }); } catch (e) {} }, 250);
           return false;
         }
+        var MULTI = {
+          fAddrs: { ph: "0x...", mono: true, label: "Wallet address", rm: "Hapus address" },
+          fXs: { ph: "@username", mono: false, label: "Username X", rm: "Hapus username" }
+        };
+        function syncRows(box) {
+          var rows = box.querySelectorAll(".x-mrow"), many = rows.length > 1;
+          rows.forEach(function (r, i) {
+            r.querySelector(".x-mrm").hidden = !many;
+            r.querySelector("input").setAttribute("aria-label", MULTI[box.id].label + (many ? " " + (i + 1) : ""));
+          });
+        }
+        function addRow(box, value, focus) {
+          var cfg = MULTI[box.id], row = document.createElement("div");
+          row.className = "x-mrow";
+          var inp = document.createElement("input");
+          inp.className = "x-input" + (cfg.mono ? " x-mono" : "");
+          inp.type = "text"; inp.placeholder = cfg.ph; inp.autocomplete = "off"; inp.spellcheck = false;
+          inp.setAttribute("autocapitalize", "off"); inp.maxLength = 120; inp.value = value || "";
+          inp.addEventListener("keydown", function (e) { if (e.key === "Enter") e.preventDefault(); });
+          var rm = document.createElement("button");
+          rm.type = "button"; rm.className = "x-mrm"; rm.textContent = "✕"; rm.setAttribute("aria-label", cfg.rm);
+          row.appendChild(inp); row.appendChild(rm); box.appendChild(row);
+          syncRows(box);
+          if (focus) setTimeout(function () { try { inp.focus({ preventScroll: false }); } catch (e) {} }, 30);
+        }
+        function fillRows(box, values) {
+          box.innerHTML = "";
+          (values && values.length ? values : [""]).forEach(function (v) { addRow(box, v, false); });
+        }
+        function readRows(box) {
+          return Array.prototype.map.call(box.querySelectorAll("input"), function (i) { return String(i.value || "").trim(); }).filter(Boolean);
+        }
+        ["fAddrs", "fXs"].forEach(function (id) {
+          var box = $(id);
+          box.addEventListener("click", safe(function (e) {
+            var b = e.target.closest(".x-mrm"); if (!b) return;
+            var row = b.closest(".x-mrow"), next = row.nextElementSibling || row.previousElementSibling;
+            row.remove(); syncRows(box);
+            if (next) { var ni = next.querySelector("input"); if (ni) ni.focus({ preventScroll: true }); }
+          }));
+        });
+        $("fAddrAdd").addEventListener("click", safe(function () { addRow($("fAddrs"), "", true); }));
+        $("fXAdd").addEventListener("click", safe(function () { addRow($("fXs"), "", true); }));
+        fillRows($("fAddrs"), []); fillRows($("fXs"), []);
+
         function openForm(t) {
           editing = t || null;
           $("formTitle").textContent = t ? "Edit Garapan" : "Tambah Garapan";
@@ -760,6 +884,8 @@
           $("fDate").value = t ? t.date || "" : "";
           $("fTime").value = t ? t.time || "" : "";
           $("fNotes").value = t ? t.notes || "" : "";
+          fillRows($("fAddrs"), t ? t.addrs || [] : []);
+          fillRows($("fXs"), t ? t.xs || [] : []);
           clearErr();
           syncPickers();
           $("form").scrollTop = 0;
@@ -778,7 +904,9 @@
             chain: fChain,
             custom: String($("fCustom").value || "").trim(),
             link: link, date: date, time: date ? $("fTime").value || "" : "",
-            notes: String($("fNotes").value || "").trim()
+            notes: String($("fNotes").value || "").trim(),
+            addrs: readRows($("fAddrs")).map(function (a) { return a.replace(/\s+/g, ""); }).filter(Boolean),
+            xs: readRows($("fXs")).map(normX).filter(Boolean)
           };
         }
         function validate(v) {
@@ -798,7 +926,8 @@
             if (!validate(v)) return;
             var data = {
               name: v.name, cat: v.cat, chain: v.chain, customChain: v.chain === "lainnya" ? v.custom : "",
-              link: v.link, date: v.date, time: v.time, notes: v.notes
+              link: v.link, date: v.date, time: v.time, notes: v.notes,
+              addrs: v.addrs, xs: v.xs
             };
             var wasEdit = !!editing;
             if (editing) {
