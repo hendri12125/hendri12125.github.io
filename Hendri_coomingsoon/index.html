@@ -1,0 +1,889 @@
+<!doctype html>
+<html lang="id" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0a14" />
+    <title>Hendri_coomingsoon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap"
+    />
+    <link rel="stylesheet" href="hark.css" />
+    <link rel="stylesheet" href="hark-hero.css" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --x-bg: #0a0a14;
+        --x-card: #13131f;
+        --x-card-2: #1c1c2b;
+        --x-card-3: #191927;
+        --x-stroke: rgb(255 255 255 / 0.09);
+        --x-stroke-2: rgb(255 255 255 / 0.16);
+        --x-text: #f5f5f7;
+        --x-muted: #a1a1b5;
+        --x-purple: #8b5cf6;
+        --x-blue: #3b82f6;
+        --x-cyan: #22d3ee;
+        --x-grad: linear-gradient(135deg, #7c4ff0 0%, #2f6fe6 55%, #0e9fbd 100%) #4a5ee8;
+        --x-glow: 0 0 32px rgb(139 92 246 / 0.35), 0 0 64px rgb(34 211 238 / 0.15);
+        --x-soon: #fbbf24;
+        --x-ok: #34d399;
+        --x-bad: #f87171;
+      }
+      html, body { background: var(--x-bg); }
+      body { color: var(--x-text); font: var(--type-body); min-height: 100dvh; }
+      .x-bgfx { position: fixed; inset: 0; pointer-events: none; z-index: 0;
+        background:
+          radial-gradient(600px 400px at 10% -5%, rgb(139 92 246 / 0.22), transparent 60%),
+          radial-gradient(500px 380px at 100% 10%, rgb(34 211 238 / 0.14), transparent 60%),
+          radial-gradient(700px 500px at 50% 110%, rgb(59 130 246 / 0.12), transparent 60%); }
+      .x-app { position: relative; z-index: 1; max-width: 640px; margin: 0 auto;
+        padding: max(16px, env(safe-area-inset-top)) 16px calc(32px + env(safe-area-inset-bottom)); display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+      .x-app > * { min-width: 0; }
+      .x-card { overflow: hidden; }
+      @media (min-width: 980px) {
+        .x-app { max-width: 1120px; grid-template-columns: 380px minmax(0, 1fr); align-items: start; gap: 20px; padding-top: 28px; }
+        .x-head, .x-foot { grid-column: 1 / -1; }
+        .x-side { position: sticky; top: 20px; }
+      }
+      .x-side, .x-mainc { display: grid; gap: 16px; min-width: 0; }
+      .x-glass { background: var(--x-card); border: 1px solid var(--x-stroke); border-radius: var(--r-l);
+        backdrop-filter: blur(20px) saturate(1.4); -webkit-backdrop-filter: blur(20px) saturate(1.4); }
+      .x-gradtext { color: #ece8ff; text-shadow: 0 0 24px rgb(139 92 246 / 0.55); }
+
+      /* header */
+      .x-head { display: flex; align-items: center; gap: 12px; padding: 4px 2px; }
+      .x-logo { width: 44px; height: 44px; border-radius: 14px; background: var(--x-grad); box-shadow: var(--x-glow);
+        display: grid; place-items: center; font: 600 20px/1 var(--sans); color: #fff; flex: none; }
+      .x-head h1 { font: 600 clamp(20px, 5vw, 26px)/1.15 var(--sans); letter-spacing: -0.02em; margin: 0; word-break: break-word; }
+      .x-head p { margin: 2px 0 0; color: var(--x-muted); font: var(--type-small); }
+      .x-note { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; padding: 4px 10px; border-radius: var(--r-pill);
+        background: #221d10; border: 1px solid rgb(251 191 36 / 0.25); color: #fcd34d; font: var(--type-caption); }
+      .x-note[hidden] { display: none; }
+
+      /* check-in */
+      .x-card { padding: 20px; }
+      .x-card h2 { font: var(--type-heading); margin: 0; letter-spacing: -0.01em; }
+      .x-sub { color: var(--x-muted); font: var(--type-small); margin: 4px 0 0; }
+      .x-checkbtn { position: relative; width: 100%; margin-top: 16px; min-height: 64px; border: 0; border-radius: var(--r-m);
+        background: var(--x-grad); color: #fff; font: 600 18px/1.2 var(--sans); cursor: pointer; box-shadow: var(--x-glow);
+        transition: transform var(--dur-quick, .2s) var(--ease-out, ease), box-shadow .3s, opacity .3s; overflow: hidden; }
+      .x-checkbtn::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.25) 50%, transparent 70%);
+        transform: translateX(-100%); animation: x-shine 3s ease-in-out infinite; }
+      .x-checkbtn:not(:disabled):hover { transform: translateY(-1px); box-shadow: 0 0 40px rgb(139 92 246 / 0.5), 0 0 80px rgb(34 211 238 / 0.25); }
+      .x-checkbtn:not(:disabled):active { transform: scale(0.98); }
+      .x-checkbtn:disabled { cursor: default; background: #0f2a22; color: var(--x-ok); box-shadow: inset 0 0 0 1px rgb(52 211 153 / 0.35); }
+      .x-checkbtn:disabled::after { display: none; }
+      .x-checkbtn.is-pop { animation: x-pop .6s var(--ease-out, ease); }
+      @keyframes x-shine { 0%, 60% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+      @keyframes x-pop { 0% { transform: scale(1); } 30% { transform: scale(1.05); box-shadow: 0 0 0 0 rgb(52 211 153 / .6); } 100% { transform: scale(1); box-shadow: 0 0 0 24px rgb(52 211 153 / 0); } }
+
+      .x-streaks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
+      .x-streak { background: var(--x-card-3); border: 1px solid var(--x-stroke); border-radius: var(--r-s); padding: 12px 10px; text-align: center; }
+      .x-streak b { display: block; font: 600 24px/1.1 var(--sans); letter-spacing: -0.02em; }
+      .x-streak span { display: block; margin-top: 4px; color: var(--x-muted); font: var(--type-caption); }
+      .x-streak--main { background: linear-gradient(135deg, #261c45, #10283a) #1d2240; border-color: rgb(139 92 246 / 0.35); }
+
+      .x-label { font: var(--type-tag); color: var(--x-muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 20px 0 10px; }
+      .x-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+      .x-day { display: grid; justify-items: center; gap: 6px; font: var(--type-caption); color: var(--x-muted); }
+      .x-day i { width: 30px; height: 30px; border-radius: 50%; border: 1.5px dashed var(--x-stroke-2); display: grid; place-items: center; font-style: normal; font-size: 13px; color: #fff; }
+      .x-day.is-on i { border: 0; background: var(--x-grad); box-shadow: 0 0 14px rgb(139 92 246 / 0.45); }
+      .x-day.is-today { color: var(--x-text); font-weight: 600; }
+      .x-day.is-today:not(.is-on) i { border-style: solid; border-color: var(--x-purple); }
+      .x-heat { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; }
+      .x-heat span { aspect-ratio: 1; border-radius: 5px; background: rgb(255 255 255 / 0.06); }
+      .x-heat span.is-on { background: var(--x-grad); box-shadow: 0 0 8px rgb(59 130 246 / 0.35); }
+      .x-heat span.is-today { outline: 1.5px solid var(--x-cyan); outline-offset: 1px; }
+      .x-heatlegend { display: flex; justify-content: space-between; margin-top: 8px; color: var(--x-muted); font: var(--type-caption); }
+
+      /* stats strip */
+      .x-stats { display: grid; grid-template-columns: repeat(3, 1fr) 1.6fr; gap: 8px; }
+      @media (max-width: 520px) { .x-stats { grid-template-columns: repeat(3, 1fr); } .x-stat--wide { grid-column: 1 / -1; } }
+      .x-stat { padding: 12px 14px; border-radius: var(--r-s); background: var(--x-card-3); border: 1px solid var(--x-stroke); min-width: 0; }
+      .x-stat b { display: block; font: 600 22px/1.1 var(--sans); }
+      .x-stat span { display: block; margin-top: 4px; color: var(--x-muted); font: var(--type-caption); }
+      .x-stat--wide b { font: 600 15px/1.25 var(--sans); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .x-stat--wide em { font-style: normal; color: var(--x-cyan); font: var(--type-caption); display: block; margin-top: 2px; }
+
+      /* task section */
+      .x-tasks-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+      .x-add { min-height: var(--tap); padding: 0 18px; border: 0; border-radius: var(--r-pill); background: var(--x-grad); color: #fff;
+        font: 600 15px/1 var(--sans); cursor: pointer; box-shadow: 0 0 24px rgb(139 92 246 / 0.35); transition: transform .2s; }
+      .x-add:active { transform: scale(0.96); }
+      .x-search { position: relative; margin-top: 14px; }
+      .x-search input { padding-left: 40px; }
+      .x-search::before { content: "⌕"; position: absolute; left: 14px; top: 50%; transform: translateY(-52%); color: var(--x-muted); font-size: 20px; pointer-events: none; }
+      .x-scroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 12px -20px 0; padding: 2px 20px; }
+      .x-scroll::-webkit-scrollbar { display: none; }
+      .x-tab { flex: none; min-height: var(--tap); padding: 0 14px; display: inline-flex; align-items: center; gap: 6px; border-radius: var(--r-pill);
+        border: 1px solid var(--x-stroke); background: var(--x-card); color: var(--x-muted); font: var(--type-label); cursor: pointer; transition: all .2s; white-space: nowrap; }
+      .x-tab small { font: var(--type-caption); opacity: .7; }
+      .x-tab[aria-pressed="true"] { color: #fff; border-color: transparent; background: linear-gradient(var(--x-bg), var(--x-bg)) padding-box, var(--x-grad) border-box; border: 1px solid transparent; box-shadow: 0 0 16px rgb(139 92 246 / 0.3); }
+      .x-tab .x-clogo { width: 22px; height: 22px; font-size: 9px; }
+      .x-tab--chain { padding: 0 12px 0 6px; }
+
+      .x-list { display: grid; gap: 12px; margin-top: 16px; }
+      .x-task { position: relative; padding: 16px; border-radius: var(--r-m); background: var(--x-card); border: 1px solid var(--x-stroke);
+        transition: opacity .3s, transform .3s, border-color .3s; animation: x-in .35s var(--ease-out, ease) both; }
+      .x-quiet .x-task { animation: none; }
+      @keyframes x-in { from { opacity: 0; transform: translateY(8px); } }
+      .x-task.is-urgent { border-color: rgb(251 191 36 / 0.45); box-shadow: 0 0 24px rgb(251 191 36 / 0.12); }
+      .x-task.is-done { opacity: 0.5; }
+      .x-task.is-done h3 { text-decoration: line-through; text-decoration-color: var(--x-muted); }
+      .x-task__top { display: flex; gap: 12px; align-items: flex-start; }
+      .x-task__meta { flex: 1; min-width: 0; }
+      .x-task__chain { font: var(--type-caption); color: var(--x-muted); }
+      .x-task h3 { margin: 2px 0 0; font: 600 17px/1.25 var(--sans); word-break: break-word; }
+      .x-badge { flex: none; padding: 4px 10px; border-radius: var(--r-pill); font: var(--type-tag); border: 1px solid; }
+      .x-cat-waitlist { color: #fcd34d; background: #2a2412; border-color: rgb(251 191 36 / .3); }
+      .x-cat-testnet { color: #67e8f9; background: #0f2830; border-color: rgb(34 211 238 / .3); }
+      .x-cat-mint { color: #f9a8d4; background: #2c1424; border-color: rgb(236 72 153 / .35); }
+      .x-cat-whitelist { color: #6ee7b7; background: #10281f; border-color: rgb(52 211 153 / .3); }
+      .x-cat-airdrop { color: #c4b5fd; background: #221a3a; border-color: rgb(139 92 246 / .4); }
+      .x-cat-lainnya { color: #cbd5e1; background: #1e2129; border-color: rgb(148 163 184 / .3); }
+      .x-due { display: inline-flex; align-items: center; gap: 6px; margin: 12px 0 0; padding: 5px 10px; border-radius: var(--r-s);
+        background: var(--x-card-2); font: var(--type-label); }
+      .x-due small { color: var(--x-muted); font: var(--type-caption); }
+      .x-due.is-soon { background: #2a2312; color: #fcd34d; animation: x-blink 2s ease-in-out infinite; }
+      .x-due.is-soon small { color: #e5c97a; }
+      .x-due.is-past { color: var(--x-bad); background: #2a1618; }
+      @keyframes x-blink { 50% { box-shadow: 0 0 0 4px rgb(251 191 36 / 0.08); } }
+      .x-notes { margin: 10px 0 0; color: var(--x-muted); font: var(--type-small); white-space: pre-wrap; word-break: break-word; }
+      .x-actions { display: flex; gap: 8px; margin-top: 14px; align-items: center; flex-wrap: wrap; }
+      .x-actions .x-spacer { flex: 1; }
+      .x-sbtn { min-height: var(--tap); min-width: var(--tap); padding: 0 12px; border-radius: var(--r-pill); border: 1px solid var(--x-stroke-2);
+        background: transparent; color: var(--x-text); font: var(--type-label); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; transition: background .2s, border-color .2s; }
+      .x-sbtn:hover { background: var(--x-card-2); }
+      .x-sbtn--open { background: var(--x-grad); border-color: transparent; color: #fff; }
+      .x-sbtn--open:hover { background: var(--x-grad); filter: brightness(1.1); }
+      .x-status { padding-left: 10px; }
+      .x-status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--x-soon); box-shadow: 0 0 8px var(--x-soon); }
+      .x-status.is-done { color: var(--x-ok); border-color: rgb(52 211 153 / .4); }
+      .x-status.is-done::before { background: var(--x-ok); box-shadow: 0 0 8px var(--x-ok); }
+      .x-sbtn--del:hover { border-color: rgb(248 113 113 / .5); color: var(--x-bad); }
+      .x-empty { text-align: center; padding: 40px 20px; border: 1.5px dashed var(--x-stroke-2); border-radius: var(--r-m); color: var(--x-muted); }
+      .x-empty b { display: block; font-size: 36px; margin-bottom: 8px; }
+      .x-empty p { margin: 0; font: var(--type-body); }
+
+      /* chain logos */
+      .x-clogo { width: 40px; height: 40px; border-radius: 50%; flex: none; object-fit: cover; background: #fff; display: grid; place-items: center;
+        box-shadow: 0 0 0 1px var(--x-stroke-2); }
+      span.x-clogo { background: var(--x-grad); color: #fff; font: 600 13px/1 var(--sans); letter-spacing: 0.02em; }
+
+      /* inputs */
+      .x-input { width: 100%; min-height: var(--tap); padding: 10px 14px; border-radius: var(--r-s); border: 1px solid var(--x-stroke-2);
+        background: var(--x-card-3); color: var(--x-text); font: var(--type-body); font-size: 16px; outline: none; transition: border-color .2s, box-shadow .2s; }
+      .x-input:focus { border-color: var(--x-purple); box-shadow: 0 0 0 3px rgb(139 92 246 / 0.25); }
+      .x-input::placeholder { color: rgb(161 161 181 / .7); }
+      textarea.x-input { min-height: 84px; resize: vertical; }
+      input[type="date"].x-input, input[type="time"].x-input { color-scheme: dark; }
+
+      /* sheet */
+      .x-overlay { position: fixed; inset: 0; z-index: 50; background: rgb(5 5 12 / 0.65); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+        display: flex; align-items: flex-end; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .25s; }
+      .x-overlay.is-open { opacity: 1; pointer-events: auto; }
+      .x-sheet { width: 100%; max-width: 560px; max-height: 92dvh; overflow-y: auto; background: #12121e; border: 1px solid var(--x-stroke-2);
+        border-radius: var(--r-l) var(--r-l) 0 0; padding: 10px 20px calc(20px + env(safe-area-inset-bottom)); transform: translateY(100%);
+        transition: transform .35s var(--ease-out, cubic-bezier(.2,.8,.2,1)); box-shadow: 0 -10px 60px rgb(139 92 246 / 0.15); }
+      .x-overlay.is-open .x-sheet { transform: none; }
+      @media (min-width: 640px) { .x-overlay { align-items: center; } .x-sheet { border-radius: var(--r-l); transform: translateY(24px) scale(.97); } }
+      .x-grab { width: 40px; height: 4px; border-radius: 4px; background: var(--x-stroke-2); margin: 0 auto 14px; }
+      .x-sheet h2 { font: var(--type-heading); margin: 0 0 16px; }
+      .x-field { margin-bottom: 16px; }
+      .x-field > label, .x-field > .x-flabel { display: block; font: var(--type-label); margin-bottom: 8px; }
+      .x-field .x-req { color: #b89bff; }
+      .x-field .x-opt { color: var(--x-muted); font: var(--type-caption); }
+      .x-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+
+      .x-chains { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+      @media (min-width: 480px) { .x-chains { grid-template-columns: repeat(5, 1fr); } }
+      .x-chainopt { display: grid; justify-items: center; gap: 6px; padding: 10px 4px; border-radius: var(--r-s); border: 1px solid var(--x-stroke);
+        background: var(--x-card); color: var(--x-muted); font: var(--type-caption); cursor: pointer; transition: all .2s; text-align: center; min-width: 0; }
+      .x-chainopt span:last-child { max-width: 100%; line-height: 1.2; overflow-wrap: anywhere; }
+      .x-chainopt .x-clogo { width: 36px; height: 36px; }
+      .x-chainopt[aria-checked="true"] { color: #fff; background: linear-gradient(#17172a, #17172a) padding-box, var(--x-grad) border-box; border: 1px solid transparent; box-shadow: 0 0 16px rgb(139 92 246 / 0.35); }
+      .x-chainopt[aria-checked="true"] .x-clogo { transform: scale(1.06); }
+      .x-row2 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 8px; }
+      .x-err { color: var(--x-bad); font: var(--type-small); margin: 0 0 12px; min-height: 0; }
+      .x-err:empty { display: none; }
+      .x-sheetfoot { position: sticky; bottom: calc(-20px - env(safe-area-inset-bottom)); z-index: 2; margin: 0 -20px calc(-20px - env(safe-area-inset-bottom));
+        padding: 12px 20px calc(20px + env(safe-area-inset-bottom)); background: #12121e; border-top: 1px solid var(--x-stroke); }
+      .x-sheetfoot .x-err { margin: 0 0 10px; padding: 10px 12px; border-radius: var(--r-s); background: #2a1618; border: 1px solid rgb(248 113 113 / .45); font-weight: 500; }
+      .x-sheetfoot .x-sheetbtns { margin-top: 0; }
+      .x-sheetbtns button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+      .x-input.is-invalid, .x-input.is-invalid:focus { border-color: var(--x-bad); box-shadow: 0 0 0 3px rgb(248 113 113 / .3); }
+      .x-field.is-invalid > label, .x-field.is-invalid > .x-flabel { color: var(--x-bad); }
+      .x-chains.is-invalid { border-radius: var(--r-s); box-shadow: 0 0 0 2px var(--x-bad); }
+      .x-sheetbtns { display: flex; gap: 10px; margin-top: 8px; }
+      .x-sheetbtns button { flex: 1; min-height: 48px; border-radius: var(--r-pill); font: 600 15px/1 var(--sans); cursor: pointer; }
+      .x-ghost { background: transparent; border: 1px solid var(--x-stroke-2); color: var(--x-text); }
+      .x-primary { background: var(--x-grad); border: 0; color: #fff; box-shadow: 0 0 20px rgb(139 92 246 / 0.35); }
+      .x-danger { background: var(--x-bad); border: 0; color: #1a0b0b; }
+      .x-confirm p { color: var(--x-muted); margin: 0 0 16px; }
+
+      /* footer */
+      .x-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 14px 18px; border-radius: var(--r-m); }
+      .x-foot p { margin: 0; color: var(--x-muted); font: var(--type-small); }
+      .x-foot div { display: flex; gap: 8px; }
+
+      /* toast + confetti */
+      .x-toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translate(-50%, 20px); z-index: 70; opacity: 0;
+        padding: 10px 16px; border-radius: var(--r-pill); background: #1c1c2e; border: 1px solid var(--x-stroke-2); font: var(--type-label);
+        box-shadow: 0 10px 30px rgb(0 0 0 / .4); transition: all .3s var(--ease-out, ease); pointer-events: none; max-width: 90vw; text-align: center; }
+      .x-toast.is-show { opacity: 1; transform: translate(-50%, 0); }
+      .x-confetti { position: fixed; inset: 0; pointer-events: none; z-index: 60; overflow: hidden; }
+      .x-confetti i { position: absolute; top: var(--y); left: var(--x); width: 8px; height: 12px; border-radius: 2px; background: var(--c);
+        animation: x-fall 1.4s cubic-bezier(.2,.7,.4,1) forwards; }
+      @keyframes x-fall { 0% { transform: translate(0, 0) rotate(0); opacity: 1; } 100% { transform: translate(var(--dx), var(--dy)) rotate(var(--r)); opacity: 0; } }
+      @media (prefers-reduced-motion: reduce) {
+        .x-checkbtn::after, .x-due.is-soon, .x-task { animation: none; }
+        .x-confetti { display: none; }
+      }
+      button:focus-visible, a:focus-visible { outline: 2px solid var(--x-cyan); outline-offset: 2px; }
+      .x-vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    </style>
+  </head>
+  <body>
+    <div class="x-bgfx" aria-hidden="true"></div>
+    <div class="page" id="top">
+      <div class="x-app">
+        <header class="x-head">
+          <div class="x-logo" aria-hidden="true">H</div>
+          <div>
+            <h1 class="x-gradtext">Hendri_coomingsoon</h1>
+            <p>Garapan tracker &amp; daily check-in</p>
+            <span class="x-note" id="previewNote" hidden>⚠︎ Mode preview: data belum tersimpan permanen</span>
+          </div>
+        </header>
+
+        <div class="x-side">
+          <section class="x-glass x-card" aria-labelledby="ci-title">
+            <h2 id="ci-title">Daily Check-in</h2>
+            <p class="x-sub" id="ciSub">Satu tap sehari, jaga streak-nya!</p>
+            <button class="x-checkbtn" id="checkBtn" type="button">Check-in Hari Ini</button>
+            <div class="x-streaks">
+              <div class="x-streak x-streak--main"><b id="stCur">🔥 0</b><span>Streak (hari)</span></div>
+              <div class="x-streak"><b id="stLong">0</b><span>Streak terpanjang</span></div>
+              <div class="x-streak"><b id="stTotal">0</b><span>Total check-in</span></div>
+            </div>
+            <p class="x-label">7 hari terakhir</p>
+            <div class="x-week" id="week"></div>
+            <p class="x-label">30 hari terakhir</p>
+            <div class="x-heat" id="heat" role="img" aria-label="Heatmap check-in 30 hari"></div>
+            <div class="x-heatlegend"><span id="heatStart"></span><span>Hari ini</span></div>
+          </section>
+        </div>
+
+        <div class="x-mainc">
+          <section class="x-stats" aria-label="Ringkasan garapan">
+            <div class="x-stat"><b id="sTotal">0</b><span>Total</span></div>
+            <div class="x-stat"><b id="sOn">0</b><span>Ongoing</span></div>
+            <div class="x-stat"><b id="sDone">0</b><span>Done</span></div>
+            <div class="x-stat x-stat--wide"><b id="sNext">—</b><em id="sNextWhen">Belum ada jadwal mint</em><span>Mint terdekat</span></div>
+          </section>
+
+          <section class="x-glass x-card" aria-labelledby="t-title">
+            <div class="x-tasks-head">
+              <h2 id="t-title">Daftar Garapan</h2>
+              <button class="x-add" id="addBtn" type="button">+ Tambah Garapan</button>
+            </div>
+            <div class="x-search">
+              <input class="x-input" id="q" type="search" aria-label="Cari garapan" placeholder="Cari nama project, catatan…" autocomplete="off" />
+            </div>
+            <div class="x-scroll" id="catTabs" role="group" aria-label="Filter kategori"></div>
+            <div class="x-scroll" id="chainTabs" role="group" aria-label="Filter chain"></div>
+            <div class="x-list" id="list"></div>
+          </section>
+        </div>
+
+        <footer class="x-glass x-foot">
+          <p>Hendri_coomingsoon © 2026</p>
+          <div>
+            <button class="x-sbtn" id="exportBtn" type="button">⬇ Export</button>
+            <button class="x-sbtn" id="importBtn" type="button">⬆ Import</button>
+            <input type="file" id="importFile" accept="application/json,.json" hidden />
+          </div>
+        </footer>
+      </div>
+    </div>
+
+    <!-- form sheet -->
+    <div class="x-overlay" id="formOv" aria-hidden="true">
+      <div class="x-sheet" id="form" role="dialog" aria-modal="true" aria-labelledby="formTitle">
+        <div class="x-grab" aria-hidden="true"></div>
+        <h2 id="formTitle">Tambah Garapan</h2>
+        <div class="x-field">
+          <label for="fName">Nama project <span class="x-req">*</span></label>
+          <input class="x-input" id="fName" maxlength="80" placeholder="mis. Monad Testnet" autocomplete="off" />
+        </div>
+        <div class="x-field">
+          <span class="x-flabel">Kategori</span>
+          <div class="x-pills" id="fCats" role="radiogroup" aria-label="Kategori"></div>
+        </div>
+        <div class="x-field">
+          <span class="x-flabel">Chain <span class="x-req">*</span></span>
+          <div class="x-chains" id="fChains" role="radiogroup" aria-label="Chain"></div>
+          <input class="x-input" id="fCustom" maxlength="30" placeholder="Nama chain lainnya" style="margin-top:8px" hidden autocomplete="off" />
+        </div>
+        <div class="x-field">
+          <label for="fLink" id="fLinkLabel">Link <span class="x-opt">(opsional)</span></label>
+          <input class="x-input" id="fLink" type="url" inputmode="url" placeholder="https://…" autocomplete="off" />
+        </div>
+        <div class="x-field">
+          <span class="x-flabel" id="fDateLabel">Tanggal mint / deadline <span class="x-opt">(opsional)</span></span>
+          <div class="x-row2">
+            <input class="x-input" id="fDate" type="date" aria-labelledby="fDateLabel" />
+            <input class="x-input" id="fTime" type="time" aria-label="Jam" />
+          </div>
+        </div>
+        <div class="x-field">
+          <label for="fNotes">Catatan <span class="x-opt">(opsional)</span></label>
+          <textarea class="x-input" id="fNotes" maxlength="500" placeholder="Task harian, wallet yang dipake, dll."></textarea>
+        </div>
+        <div class="x-sheetfoot">
+          <p class="x-err" id="fErr" role="alert" aria-live="assertive"></p>
+          <div class="x-sheetbtns">
+            <button type="button" class="x-ghost" data-close>Batal</button>
+            <button type="button" class="x-primary" id="fSubmit">Simpan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- confirm sheet -->
+    <div class="x-overlay" id="confOv" aria-hidden="true">
+      <div class="x-sheet x-confirm" role="alertdialog" aria-modal="true" aria-labelledby="confTitle">
+        <div class="x-grab" aria-hidden="true"></div>
+        <h2 id="confTitle">Yakin?</h2>
+        <p id="confMsg"></p>
+        <div class="x-sheetbtns">
+          <button type="button" class="x-ghost" data-close>Batal</button>
+          <button type="button" class="x-danger" id="confOk">Hapus</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="x-toast" id="toast" role="status" aria-live="polite"></div>
+
+    <!-- chain logo templates, cloned by the app -->
+    <div id="logoTpl" hidden>
+      <img class="x-clogo" data-chain="ink" src="chain-ink.webp" alt="" />
+      <img class="x-clogo" data-chain="ethereum" src="chain-ethereum.webp" alt="" />
+      <img class="x-clogo" data-chain="robinhood" src="chain-robinhood.webp" alt="" />
+      <img class="x-clogo" data-chain="binance" src="chain-binance.webp" alt="" />
+      <img class="x-clogo" data-chain="hyperliquid" src="chain-hyperliquid.webp" alt="" />
+      <img class="x-clogo" data-chain="base" src="chain-base.webp" alt="" />
+      <img class="x-clogo" data-chain="arbitrum" src="chain-arbitrum.webp" alt="" />
+      <img class="x-clogo" data-chain="optimism" src="chain-optimism.webp" alt="" />
+      <img class="x-clogo" data-chain="polygon" src="chain-polygon.webp" alt="" />
+      <img class="x-clogo" data-chain="solana" src="chain-solana.webp" alt="" />
+      <img class="x-clogo" data-chain="monad" src="chain-monad.webp" alt="" />
+      <img class="x-clogo" data-chain="megaeth" src="chain-megaeth.webp" alt="" />
+    </div>
+
+    <script src="hark.js"></script>
+    <script>
+      (function () {
+        document.documentElement.setAttribute("data-theme", "dark");
+        var KEY = "hendri_coomingsoon_v1";
+        var CATS = [
+          { id: "waitlist", name: "Waitlist" },
+          { id: "testnet", name: "Testnet" },
+          { id: "mint", name: "Mint (OpenSea)", short: "Mint" },
+          { id: "whitelist", name: "Whitelist" },
+          { id: "airdrop", name: "Airdrop" },
+          { id: "lainnya", name: "Lainnya" }
+        ];
+        var CHAINS = [
+          ["ink", "Ink"], ["ethereum", "Ethereum"], ["robinhood", "Robinhood Chain"], ["binance", "BNB Chain"],
+          ["hyperliquid", "Hype"], ["base", "Base"], ["arbitrum", "Arbitrum"], ["optimism", "Optimism"],
+          ["polygon", "Polygon"], ["solana", "Solana"], ["monad", "Monad"], ["megaeth", "MegaETH"]
+        ];
+        var CHAIN_NAME = {}; CHAINS.forEach(function (c) { CHAIN_NAME[c[0]] = c[1]; });
+        var CAT = {}; CATS.forEach(function (c) { CAT[c.id] = c; });
+        var DAYS = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+        var $ = function (id) { return document.getElementById(id); };
+
+        /* ---------- storage ---------- */
+        var persistent = true;
+        function blank() { return { v: 1, checkins: [], streak: 0, longest: 0, last: null, tasks: [] }; }
+        function norm(d) {
+          var b = blank();
+          if (!d || typeof d !== "object") return b;
+          return {
+            v: 1,
+            checkins: Array.isArray(d.checkins) ? d.checkins.filter(function (x) { return typeof x === "string"; }) : [],
+            streak: +d.streak || 0, longest: +d.longest || 0, last: typeof d.last === "string" ? d.last : null,
+            tasks: Array.isArray(d.tasks) ? d.tasks.filter(function (t) { return t && t.id && t.name; }) : []
+          };
+        }
+        function load() {
+          try {
+            var t = "__hc_test"; localStorage.setItem(t, "1"); localStorage.removeItem(t);
+            var raw = localStorage.getItem(KEY);
+            return raw ? norm(JSON.parse(raw)) : blank();
+          } catch (e) { persistent = false; return blank(); }
+        }
+        var S = load();
+        function showPreviewNote() { try { var n = $("previewNote"); if (n) n.hidden = persistent; } catch (e) {} }
+        /* S (in memory) is the source of truth; storage is best-effort and can never abort a save */
+        function save() {
+          if (!persistent) return true;
+          try { localStorage.setItem(KEY, JSON.stringify(S)); return true; }
+          catch (e) { persistent = false; showPreviewNote(); return false; }
+        }
+        function safe(fn) {
+          return function (e) {
+            try { return fn.apply(this, arguments); }
+            catch (err) { try { console.error(err); toast("Ada error, coba lagi ya"); } catch (x) {} }
+          };
+        }
+        showPreviewNote();
+
+        /* ---------- helpers ---------- */
+        function pad(n) { return n < 10 ? "0" + n : "" + n; }
+        function ymd(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+        function addDays(d, n) { var x = new Date(d.getFullYear(), d.getMonth(), d.getDate()); x.setDate(x.getDate() + n); return x; }
+        function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+        function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+        function initials(name) {
+          var w = String(name || "?").trim().split(/\s+/).filter(Boolean);
+          if (!w.length) return "?";
+          return (w.length > 1 ? w[0][0] + w[1][0] : w[0].slice(0, 2)).toUpperCase();
+        }
+        function logo(chain, custom) {
+          if (chain !== "lainnya") {
+            var tpl = document.querySelector('#logoTpl img[data-chain="' + chain + '"]');
+            if (tpl) return tpl.cloneNode(true);
+          }
+          var s = document.createElement("span");
+          s.className = "x-clogo"; s.setAttribute("aria-hidden", "true");
+          s.textContent = chain === "lainnya" && custom ? initials(custom) : "+";
+          return s;
+        }
+        function chainName(t) { return t.chain === "lainnya" ? (t.customChain || "Lainnya") : CHAIN_NAME[t.chain] || t.chain; }
+        function chainKey(t) { return t.chain === "lainnya" ? "c:" + String(t.customChain || "").trim().toLowerCase() : t.chain; }
+        var toastT;
+        function toast(msg) {
+          var el = $("toast"); el.textContent = msg; el.classList.add("is-show");
+          clearTimeout(toastT); toastT = setTimeout(function () { el.classList.remove("is-show"); }, 2200);
+        }
+
+        /* ---------- check-in ---------- */
+        function curStreak() {
+          var now = new Date();
+          return S.last === ymd(now) || S.last === ymd(addDays(now, -1)) ? S.streak : 0;
+        }
+        function renderCheckin() {
+          var now = new Date(), today = ymd(now), done = S.last === today, set = {};
+          S.checkins.forEach(function (d) { set[d] = 1; });
+          var btn = $("checkBtn");
+          btn.disabled = done;
+          btn.textContent = done ? "✓ Sudah check-in hari ini" : "Check-in Hari Ini";
+          var cs = curStreak();
+          $("ciSub").textContent = done ? "Mantap! Balik lagi besok ya 🚀" : cs > 0 ? "Jangan putus! Tap sekarang biar streak lanjut." : "Satu tap sehari, jaga streak-nya!";
+          $("stCur").textContent = "🔥 " + cs;
+          $("stLong").textContent = S.longest;
+          $("stTotal").textContent = S.checkins.length;
+          var w = "";
+          for (var i = 6; i >= 0; i--) {
+            var d = addDays(now, -i), k = ymd(d), on = !!set[k];
+            w += '<div class="x-day' + (on ? " is-on" : "") + (i === 0 ? " is-today" : "") + '" title="' + k + '"><i>' + (on ? "✓" : "") + "</i>" + DAYS[d.getDay()] + "</div>";
+          }
+          $("week").innerHTML = w;
+          var h = "";
+          for (var j = 29; j >= 0; j--) {
+            var dd = addDays(now, -j), kk = ymd(dd);
+            h += '<span class="' + (set[kk] ? "is-on" : "") + (j === 0 ? " is-today" : "") + '" title="' + kk + (set[kk] ? " ✓" : "") + '"></span>';
+          }
+          $("heat").innerHTML = h;
+          $("heatStart").textContent = addDays(now, -29).toLocaleDateString("id-ID", { day: "numeric", month: "short" });
+        }
+        $("checkBtn").addEventListener("click", safe(function () {
+          var now = new Date(), today = ymd(now);
+          if (S.last === today) return;
+          var yest = ymd(addDays(now, -1));
+          S.streak = S.last === yest ? S.streak + 1 : 1;
+          S.last = today;
+          if (S.checkins.indexOf(today) < 0) S.checkins.push(today);
+          S.longest = Math.max(S.longest, S.streak);
+          save(); renderCheckin();
+          toast(S.streak > 1 ? "🔥 Streak " + S.streak + " hari! Gas terus!" : "✓ Check-in berhasil!");
+          var b = $("checkBtn"); b.classList.remove("is-pop"); void b.offsetWidth; b.classList.add("is-pop");
+          try { confetti(b); } catch (e) {}
+        }));
+        function confetti(el) {
+          if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+          var r = el.getBoundingClientRect(), box = document.createElement("div");
+          box.className = "x-confetti";
+          var colors = ["#8b5cf6", "#3b82f6", "#22d3ee", "#f472b6", "#fbbf24", "#34d399"];
+          for (var i = 0; i < 48; i++) {
+            var p = document.createElement("i"), a = Math.random() * Math.PI * 2, dist = 80 + Math.random() * 180;
+            p.style.setProperty("--x", r.left + r.width / 2 + (Math.random() - 0.5) * r.width * 0.6 + "px");
+            p.style.setProperty("--y", r.top + r.height / 2 + "px");
+            p.style.setProperty("--dx", Math.cos(a) * dist + "px");
+            p.style.setProperty("--dy", Math.sin(a) * dist - 60 + Math.random() * 200 + "px");
+            p.style.setProperty("--r", Math.random() * 720 - 360 + "deg");
+            p.style.setProperty("--c", colors[i % colors.length]);
+            p.style.animationDelay = Math.random() * 0.1 + "s";
+            box.appendChild(p);
+          }
+          document.body.appendChild(box);
+          setTimeout(function () { box.remove(); }, 1700);
+        }
+
+        /* ---------- tasks ---------- */
+        var F = { cat: "all", chain: "all", q: "" };
+        function deadline(t) { return t.date ? new Date(t.date + "T" + (t.time || "23:59")) : null; }
+        function due(t) {
+          var d = deadline(t); if (!d || isNaN(d)) return null;
+          var now = new Date(), diff = d - now, pre = t.cat === "mint" ? "Mint" : "Deadline";
+          var when = d.toLocaleDateString("id-ID", { weekday: "short", day: "numeric", month: "short" }) + (t.time ? ", " + t.time : "");
+          if (diff < 0) return { txt: "Lewat", when: when, cls: "is-past", urgent: false };
+          if (t.date === ymd(now)) return { txt: "Hari ini!", when: when, cls: "is-soon", urgent: true };
+          if (diff < 864e5) return { txt: pre + " " + Math.max(1, Math.ceil(diff / 36e5)) + " jam lagi", when: when, cls: "is-soon", urgent: true };
+          var days = Math.round((addDays(d, 0) - addDays(now, 0)) / 864e5);
+          return { txt: pre + " " + days + " hari lagi", when: when, cls: "", urgent: false };
+        }
+        function sorted(list) {
+          return list.slice().sort(function (a, b) {
+            if (!!a.done !== !!b.done) return a.done ? 1 : -1;
+            var da = deadline(a), db = deadline(b);
+            if (da && db) return da - db;
+            if (da) return -1; if (db) return 1;
+            return (b.created || 0) - (a.created || 0);
+          });
+        }
+        function renderFilters() {
+          var counts = { all: S.tasks.length };
+          S.tasks.forEach(function (t) { counts[t.cat] = (counts[t.cat] || 0) + 1; });
+          var h = '<button type="button" class="x-tab" data-cat="all" aria-pressed="' + (F.cat === "all") + '">Semua <small>' + counts.all + "</small></button>";
+          CATS.forEach(function (c) {
+            h += '<button type="button" class="x-tab" data-cat="' + c.id + '" aria-pressed="' + (F.cat === c.id) + '">' + (c.short || c.name) + (counts[c.id] ? " <small>" + counts[c.id] + "</small>" : "") + "</button>";
+          });
+          $("catTabs").innerHTML = h;
+          // chain chips: only chains in use
+          var used = {}, order = [];
+          S.tasks.forEach(function (t) { var k = chainKey(t); if (!used[k]) { used[k] = t; order.push(k); } });
+          var box = $("chainTabs");
+          box.innerHTML = "";
+          box.hidden = order.length < 2;
+          if (F.chain !== "all" && !used[F.chain]) F.chain = "all";
+          if (order.length < 2) return;
+          var all = document.createElement("button");
+          all.type = "button"; all.className = "x-tab"; all.dataset.chain = "all"; all.setAttribute("aria-pressed", F.chain === "all");
+          all.textContent = "Semua chain"; box.appendChild(all);
+          order.sort(function (a, b) { return chainName(used[a]).localeCompare(chainName(used[b])); });
+          order.forEach(function (k) {
+            var t = used[k], b = document.createElement("button");
+            b.type = "button"; b.className = "x-tab x-tab--chain"; b.dataset.chain = k; b.setAttribute("aria-pressed", F.chain === k);
+            b.appendChild(logo(t.chain, t.customChain));
+            b.appendChild(document.createTextNode(chainName(t)));
+            box.appendChild(b);
+          });
+        }
+        function renderStats() {
+          var on = S.tasks.filter(function (t) { return !t.done; });
+          $("sTotal").textContent = S.tasks.length;
+          $("sOn").textContent = on.length;
+          $("sDone").textContent = S.tasks.length - on.length;
+          var now = new Date();
+          var mints = on.filter(function (t) { var d = deadline(t); return t.cat === "mint" && d && d >= now; })
+            .sort(function (a, b) { return deadline(a) - deadline(b); });
+          if (mints.length) {
+            var u = due(mints[0]);
+            $("sNext").textContent = mints[0].name;
+            $("sNextWhen").textContent = u.txt + " · " + u.when;
+          } else {
+            $("sNext").textContent = "—";
+            $("sNextWhen").textContent = "Belum ada jadwal mint";
+          }
+        }
+        function renderList() {
+          var q = F.q.trim().toLowerCase();
+          var items = sorted(S.tasks).filter(function (t) {
+            if (F.cat !== "all" && t.cat !== F.cat) return false;
+            if (F.chain !== "all" && chainKey(t) !== F.chain) return false;
+            if (q && (t.name + " " + (t.notes || "") + " " + chainName(t)).toLowerCase().indexOf(q) < 0) return false;
+            return true;
+          });
+          var list = $("list"); list.innerHTML = "";
+          if (!S.tasks.length) {
+            list.innerHTML = '<div class="x-empty"><b>🪂</b><p>Belum ada garapan. Tambahin yang pertama!</p></div>';
+            return;
+          }
+          if (!items.length) {
+            list.innerHTML = '<div class="x-empty"><b>🔍</b><p>Nggak ada garapan yang cocok sama filter ini.</p></div>';
+            return;
+          }
+          items.forEach(function (t, i) {
+            var u = due(t), c = CAT[t.cat] || CAT.lainnya;
+            var el = document.createElement("article");
+            el.className = "x-task" + (t.done ? " is-done" : "") + (u && u.urgent && !t.done ? " is-urgent" : "");
+            el.dataset.id = t.id;
+            el.style.animationDelay = Math.min(i, 8) * 0.03 + "s";
+            el.innerHTML =
+              '<div class="x-task__top"><span class="x-slot"></span><div class="x-task__meta"><span class="x-task__chain">' + esc(chainName(t)) +
+              "</span><h3>" + esc(t.name) + '</h3></div><span class="x-badge x-cat-' + c.id + '">' + esc(c.short || c.name) + "</span></div>" +
+              (u ? '<p class="x-due ' + u.cls + '">⏰ ' + esc(u.txt) + " <small>· " + esc(u.when) + "</small></p>" : "") +
+              (t.notes ? '<p class="x-notes">' + esc(t.notes) + "</p>" : "") +
+              '<div class="x-actions"><button type="button" class="x-sbtn x-status' + (t.done ? " is-done" : "") + '" data-act="toggle" aria-label="Ubah status, sekarang ' + (t.done ? "Done" : "Ongoing") + '">' +
+              (t.done ? "Done" : "Ongoing") + "</button>" +
+              (t.link ? '<a class="x-sbtn x-sbtn--open" href="' + esc(t.link) + '" target="_blank" rel="noopener">Buka ↗</a>' : "") +
+              '<span class="x-spacer"></span><button type="button" class="x-sbtn" data-act="edit" aria-label="Edit ' + esc(t.name) + '">✎</button>' +
+              '<button type="button" class="x-sbtn x-sbtn--del" data-act="del" aria-label="Hapus ' + esc(t.name) + '">🗑</button></div>';
+            var slot = el.querySelector(".x-slot");
+            slot.replaceWith(logo(t.chain, t.customChain));
+            list.appendChild(el);
+          });
+        }
+        function renderAll() { renderCheckin(); renderFilters(); renderStats(); renderList(); }
+
+        $("catTabs").addEventListener("click", function (e) {
+          var b = e.target.closest("[data-cat]"); if (!b) return;
+          F.cat = b.dataset.cat; renderFilters(); renderList();
+        });
+        $("chainTabs").addEventListener("click", function (e) {
+          var b = e.target.closest("[data-chain]"); if (!b) return;
+          F.chain = b.dataset.chain; renderFilters(); renderList();
+        });
+        $("q").addEventListener("input", function (e) { F.q = e.target.value; renderList(); });
+        $("list").addEventListener("click", safe(function (e) {
+          var b = e.target.closest("[data-act]"); if (!b) return;
+          var id = b.closest(".x-task").dataset.id, t = S.tasks.find(function (x) { return x.id === id; });
+          if (!t) return;
+          if (b.dataset.act === "toggle") {
+            t.done = !t.done; save(); renderStats(); renderList();
+            toast(t.done ? "✓ " + t.name + " selesai!" : t.name + " balik ke Ongoing");
+          } else if (b.dataset.act === "edit") openForm(t);
+          else if (b.dataset.act === "del") {
+            ask("Hapus garapan?", "“" + t.name + "” bakal dihapus permanen.", "Hapus", function () {
+              S.tasks = S.tasks.filter(function (x) { return x.id !== id; });
+              save(); renderFilters(); renderStats(); renderList(); toast("Garapan dihapus");
+            });
+          }
+        }));
+
+        /* ---------- sheets ---------- */
+        var lastFocus;
+        function openOv(ov, focusEl) {
+          lastFocus = document.activeElement;
+          ov.classList.add("is-open"); ov.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+          setTimeout(function () { if (focusEl) focusEl.focus({ preventScroll: true }); }, 60);
+        }
+        function closeOv(ov) {
+          ov.classList.remove("is-open"); ov.setAttribute("aria-hidden", "true");
+          if (!document.querySelector(".x-overlay.is-open")) document.body.style.overflow = "";
+          if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+        }
+        document.querySelectorAll(".x-overlay").forEach(function (ov) {
+          ov.addEventListener("click", function (e) { if (e.target === ov || e.target.closest("[data-close]")) closeOv(ov); });
+        });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") { var o = document.querySelector(".x-overlay.is-open:last-of-type") || document.querySelector(".x-overlay.is-open"); if (o) closeOv(o); }
+        });
+        var confCb = null;
+        function ask(title, msg, okLabel, cb) {
+          $("confTitle").textContent = title; $("confMsg").textContent = msg; $("confOk").textContent = okLabel;
+          confCb = cb; openOv($("confOv"), $("confOk"));
+        }
+        $("confOk").addEventListener("click", safe(function () { var cb = confCb; confCb = null; closeOv($("confOv")); if (cb) cb(); }));
+
+        /* ---------- form ---------- */
+        var editing = null, fCat = null, fChain = null;
+        (function buildPickers() {
+          var h = "";
+          CATS.forEach(function (c) { h += '<button type="button" class="x-tab" role="radio" data-v="' + c.id + '">' + c.name + "</button>"; });
+          $("fCats").innerHTML = h;
+          var box = $("fChains");
+          CHAINS.concat([["lainnya", "Lainnya"]]).forEach(function (c) {
+            var b = document.createElement("button");
+            b.type = "button"; b.className = "x-chainopt"; b.setAttribute("role", "radio"); b.dataset.v = c[0];
+            b.appendChild(logo(c[0], null));
+            var s = document.createElement("span"); s.textContent = c[1]; b.appendChild(s);
+            box.appendChild(b);
+          });
+        })();
+        function syncPickers() {
+          $("fCats").querySelectorAll("[data-v]").forEach(function (b) {
+            var on = b.dataset.v === fCat; b.setAttribute("aria-checked", on); b.setAttribute("aria-pressed", on);
+          });
+          $("fChains").querySelectorAll("[data-v]").forEach(function (b) { b.setAttribute("aria-checked", b.dataset.v === fChain); });
+          $("fCustom").hidden = fChain !== "lainnya";
+          var other = $("fChains").querySelector('[data-v="lainnya"] .x-clogo');
+          other.textContent = fChain === "lainnya" && $("fCustom").value.trim() ? initials($("fCustom").value) : "+";
+          $("fLinkLabel").innerHTML = (fCat === "mint" ? "Link OpenSea / mint" : "Link") + ' <span class="x-opt">(opsional)</span>';
+          $("fLink").placeholder = fCat === "mint" ? "https://opensea.io/…" : "https://…";
+        }
+        $("fCats").addEventListener("click", function (e) { var b = e.target.closest("[data-v]"); if (b) { fCat = b.dataset.v; syncPickers(); } });
+        $("fChains").addEventListener("click", function (e) {
+          var b = e.target.closest("[data-v]"); if (!b) return;
+          fChain = b.dataset.v; syncPickers(); clearErr();
+          if (fChain === "lainnya") $("fCustom").focus();
+        });
+        $("fCustom").addEventListener("input", function () { syncPickers(); unmark($("fCustom")); });
+        $("fName").addEventListener("input", function () { unmark($("fName")); if (!document.querySelector("#form .is-invalid")) clearErr(); });
+        $("fLink").addEventListener("input", function () { unmark($("fLink")); });
+        function clearErr() {
+          $("fErr").textContent = "";
+          document.querySelectorAll("#form .is-invalid").forEach(function (el) { el.classList.remove("is-invalid"); });
+          ["fName", "fCustom", "fLink"].forEach(function (id) { $(id).removeAttribute("aria-invalid"); });
+        }
+        function unmark(el) {
+          el.classList.remove("is-invalid"); el.removeAttribute("aria-invalid");
+          var f = el.closest(".x-field"); if (f) f.classList.remove("is-invalid");
+        }
+        function fail(msg, el, focus) {
+          $("fErr").textContent = "⚠ " + msg;
+          el.classList.add("is-invalid");
+          if (el.tagName === "INPUT") el.setAttribute("aria-invalid", "true");
+          var f = el.closest(".x-field"); if (f) f.classList.add("is-invalid");
+          var field = f || el;
+          try { field.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) { try { field.scrollIntoView(); } catch (x) {} }
+          if (focus) setTimeout(function () { try { el.focus({ preventScroll: true }); } catch (e) {} }, 250);
+          return false;
+        }
+        function openForm(t) {
+          editing = t || null;
+          $("formTitle").textContent = t ? "Edit Garapan" : "Tambah Garapan";
+          $("fSubmit").textContent = t ? "Simpan perubahan" : "Simpan";
+          $("fName").value = t ? t.name : "";
+          fCat = t && CAT[t.cat] ? t.cat : null;
+          fChain = t ? t.chain : null;
+          $("fCustom").value = t && t.customChain ? t.customChain : "";
+          $("fLink").value = t ? t.link || "" : "";
+          $("fDate").value = t ? t.date || "" : "";
+          $("fTime").value = t ? t.time || "" : "";
+          $("fNotes").value = t ? t.notes || "" : "";
+          clearErr();
+          syncPickers();
+          $("form").scrollTop = 0;
+          openOv($("formOv"), $("fName"));
+        }
+        $("addBtn").addEventListener("click", safe(function () { openForm(null); }));
+
+        /* Simpan: a plain button with a direct handler. No <form>, no submit event, no HTML5 validation,
+           so it works inside an iframe sandboxed with allow-scripts only. */
+        function readForm() {
+          var link = String($("fLink").value || "").trim(), date = $("fDate").value || "";
+          if (link && !/^https?:\/\//i.test(link)) link = "https://" + link;
+          return {
+            name: String($("fName").value || "").trim(),
+            cat: fCat && CAT[fCat] ? fCat : "lainnya",
+            chain: fChain,
+            custom: String($("fCustom").value || "").trim(),
+            link: link, date: date, time: date ? $("fTime").value || "" : "",
+            notes: String($("fNotes").value || "").trim()
+          };
+        }
+        function validate(v) {
+          clearErr();
+          if (!v.name) return fail("Nama project wajib diisi.", $("fName"), true);
+          if (!v.chain) return fail("Pilih chain dulu ya.", $("fChains"), false);
+          if (v.chain === "lainnya" && !v.custom) return fail("Ketik nama chain-nya.", $("fCustom"), true);
+          if (v.link && !/^https?:\/\/[^\s.]+\.[^\s]+/i.test(v.link)) return fail("Link-nya kayaknya belum bener.", $("fLink"), true);
+          return true;
+        }
+        var saving = false;
+        function submitForm() {
+          if (saving) return;
+          saving = true;
+          try {
+            var v = readForm();
+            if (!validate(v)) return;
+            var data = {
+              name: v.name, cat: v.cat, chain: v.chain, customChain: v.chain === "lainnya" ? v.custom : "",
+              link: v.link, date: v.date, time: v.time, notes: v.notes
+            };
+            var wasEdit = !!editing;
+            if (editing) {
+              for (var k in data) editing[k] = data[k];
+            } else {
+              var t = { id: uid(), done: false, created: Date.now() };
+              for (var j in data) t[j] = data[j];
+              S.tasks.push(t);
+              F.cat = "all"; F.chain = "all"; F.q = ""; try { $("q").value = ""; } catch (e) {}
+            }
+            editing = null;
+            save();
+            closeOv($("formOv"));
+            try { renderFilters(); renderStats(); renderList(); } catch (e) { try { console.error(e); } catch (x) {} }
+            toast(wasEdit ? "Perubahan disimpan ✓" : "Garapan ditambahkan ✓");
+          } catch (err) {
+            try { console.error(err); } catch (x) {}
+            $("fErr").textContent = "⚠ Gagal menyimpan, coba lagi ya.";
+          } finally {
+            setTimeout(function () { saving = false; }, 350);
+          }
+        }
+        (function bindSubmit(btn) {
+          var tx = 0, ty = 0, touched = 0;
+          btn.addEventListener("touchstart", function (e) {
+            var p = e.touches && e.touches[0]; if (p) { tx = p.clientX; ty = p.clientY; }
+          }, { passive: true });
+          btn.addEventListener("touchend", function (e) {
+            var p = e.changedTouches && e.changedTouches[0];
+            if (p && (Math.abs(p.clientX - tx) > 12 || Math.abs(p.clientY - ty) > 12)) return; // a scroll, not a tap
+            touched = Date.now();
+            if (e.cancelable) e.preventDefault(); // stop the follow-up click, we handle it here
+            submitForm();
+          });
+          btn.addEventListener("click", function (e) {
+            if (Date.now() - touched < 800) return; // already handled by touchend
+            submitForm();
+          });
+        })($("fSubmit"));
+        ["fName", "fCustom", "fLink"].forEach(function (id) {
+          $(id).addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); submitForm(); } });
+        });
+
+        /* ---------- export / import ---------- */
+        $("exportBtn").addEventListener("click", function () {
+          try {
+            var blob = new Blob([JSON.stringify(S, null, 2)], { type: "application/json" });
+            var a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "hendri_coomingsoon-backup-" + ymd(new Date()) + ".json";
+            document.body.appendChild(a); a.click(); a.remove();
+            setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+            toast("⬇ Backup di-download");
+          } catch (err) { toast("Gagal export di mode ini"); }
+        });
+        $("importBtn").addEventListener("click", function () { $("importFile").value = ""; $("importFile").click(); });
+        $("importFile").addEventListener("change", function (e) {
+          var f = e.target.files && e.target.files[0]; if (!f) return;
+          var r = new FileReader();
+          r.onload = function () {
+            var d;
+            try { d = JSON.parse(r.result); } catch (err) { toast("File-nya bukan JSON yang valid"); return; }
+            if (!d || typeof d !== "object" || (!Array.isArray(d.tasks) && !Array.isArray(d.checkins))) { toast("Format backup nggak dikenali"); return; }
+            ask("Import data?", "Data sekarang bakal ditimpa sama isi file “" + f.name + "”.", "Import", function () {
+              S = norm(d); F.cat = "all"; F.chain = "all"; save(); renderAll(); toast("⬆ Data berhasil di-import");
+            });
+          };
+          r.onerror = function () { toast("Gagal baca file"); };
+          try { r.readAsText(f); } catch (err) { toast("Gagal baca file"); }
+        });
+
+        /* ---------- tick ---------- */
+        var lastDay = ymd(new Date());
+        setInterval(function () {
+          var d = ymd(new Date());
+          if (d !== lastDay) { lastDay = d; renderCheckin(); }
+          if (!document.querySelector(".x-overlay.is-open")) {
+            $("list").classList.add("x-quiet"); renderStats(); renderList();
+            setTimeout(function () { $("list").classList.remove("x-quiet"); }, 50);
+          }
+        }, 60000);
+        document.addEventListener("visibilitychange", function () { if (!document.hidden) renderAll(); });
+
+        renderAll();
+      })();
+    </script>
+  </body>
+</html>
