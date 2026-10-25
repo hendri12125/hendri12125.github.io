@@ -13,7 +13,7 @@
     />
     <link rel="stylesheet" href="hark.css" />
     <link rel="stylesheet" href="hark-hero.css" />
-    <link rel="stylesheet" href="app.css?v=os2">
+    <link rel="stylesheet" href="app.css?v=fb1">
   </head>
   <body>
     <div class="x-bgfx" aria-hidden="true"></div>
@@ -28,6 +28,7 @@
           </div>
           <div class="x-user" id="userBox" hidden>
             <span>Hai, <b id="userName">@user</b></span>
+            <button class="x-sbtn" id="syncBtn" type="button" hidden>🔄 Sinkron</button>
             <button class="x-sbtn" id="logoutBtn" type="button">Keluar</button>
           </div>
         </header>
@@ -231,6 +232,8 @@
           <h1 id="authTitle" class="x-gradtext">Hendri_coomingsoon</h1>
           <p>Garapan tracker &amp; daily check-in</p>
         </div>
+        <p class="x-autherr" id="authNet" role="status"></p>
+        <p class="x-authload" id="authLoad" aria-live="polite">Memuat…</p>
         <div class="x-authtabs" role="tablist" aria-label="Masuk atau daftar">
           <button type="button" class="x-authtab" role="tab" id="tabMasuk" data-tab="masuk" aria-controls="pMasuk" aria-selected="true">Masuk</button>
           <button type="button" class="x-authtab" role="tab" id="tabDaftar" data-tab="daftar" aria-controls="pDaftar" aria-selected="false">Daftar</button>
@@ -263,7 +266,7 @@
           <div class="x-field">
             <label for="rPass">Password</label>
             <div class="x-pw">
-              <input class="x-input" id="rPass" type="password" placeholder="Minimal 4 karakter" autocomplete="new-password" aria-describedby="rPassErr" />
+              <input class="x-input" id="rPass" type="password" placeholder="Minimal 6 karakter" autocomplete="new-password" aria-describedby="rPassErr" />
               <button type="button" class="x-eye" data-eye="rPass" aria-label="Tampilkan password" aria-pressed="false"></button>
             </div>
             <p class="x-ferr" id="rPassErr" aria-live="polite"></p>
@@ -299,6 +302,9 @@
     </div>
 
     <script src="hark.js"></script>
-    <script src="app.js?v=os2"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+    <script src="app.js?v=fb1"></script>
   </body>
 </html>
