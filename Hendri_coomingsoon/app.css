@@ -296,6 +296,16 @@
       .x-user[hidden], .x-user .x-sbtn[hidden] { display: none; }
       .x-user span { color: var(--x-muted); font: var(--type-small); }
       .x-user b { color: var(--x-text); font-weight: 600; }
+      .x-user .x-sbtn span { color: inherit; font: inherit; }
+      @media (max-width: 640px) {
+        .x-head { flex-wrap: wrap; row-gap: 10px; }
+        .x-head > div:not(.x-logo):not(.x-user) { flex: 1 1 0; min-width: 12ch; }
+        .x-head h1 { word-break: normal; overflow-wrap: normal; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .x-user { flex: 1 1 100%; flex-wrap: nowrap; justify-content: space-between; gap: 6px; }
+        .x-user > span { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .x-user .x-sbtn { flex: none; padding: 0 10px; }
+      }
+      @media (max-width: 379px) { .x-synclbl { display: none; } }
 
       /* auth screen */
       .x-auth { position: fixed; inset: 0; z-index: 45; overflow-y: auto; background: var(--x-bg); display: flex; align-items: center; justify-content: center;
